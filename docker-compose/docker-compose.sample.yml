@@ -1,58 +1,46 @@
-version: "3.7"
+version: '3'
 
 services:
-  phpfpm:
-    image: ebolution/php:7.2-fpm
-    volumes: &appvolumes
-      - sockdata:/sock
-      - ../.composer:/var/www/.composer:delegated
-      - ../.composer:/var/www/html/var/composer_home:delegated
-      - ./config/dockergento/nginx/conf/default.conf:/var/www/conf/nginx/default.conf:delegated
-    environment:
-      PHP_IDE_CONFIG: serverName=localhost
-    depends_on:
-      - db
-      - elasticsearch
-      - mailhog
-
-  nginx:
-    image: modestcoders/nginx:1.13
-    ports:
-      - 80:8000
-    volumes: *appvolumes
-    depends_on:
-      - phpfpm
-
+  # Database
   db:
     image: mysql:5.7
     ports:
-      - 3306:3306
+      - 33006:3306
+    volumes:
+      - db_data:/var/lib/mysql
+    restart: always
     environment:
       MYSQL_ROOT_PASSWORD: password
-      MYSQL_DATABASE: magento
-      MYSQL_USER: magento
-      MYSQL_PASSWORD: magento
-    volumes:
-      - dbdata:/var/lib/mysql
-
-  node:
-    image: modestcoders/node-php:node8-php7.1
-    ports:
-      - 35729:35729
-    volumes: *appvolumes
+      MYSQL_DATABASE: wordpress
+      MYSQL_USER: wordpress
+      MYSQL_PASSWORD: wordpress
+    networks:
+      - wpsite
+  # Wordpress
+  wordpress:
     depends_on:
-      - phpfpm
-
-  elasticsearch:
-    image: modestcoders/elasticsearch:6.5
-  
+      - db
+    image: ebolution/wordpress:5.4-es_es
+    ports:
+      - '8000:80'
+    restart: always
+    volumes: ['./:/var/www/html']
+    environment:
+      WORDPRESS_DB_HOST: db:3306
+      WORDPRESS_DB_USER: wordpress
+      WORDPRESS_DB_PASSWORD: wordpress
+    networks:
+      - wpsite
+  #mailhog
   mailhog:
     image: mailhog/mailhog:latest
     restart: always
     ports:
       - 1025:1025
       - 8025:8025
-
+    networks:
+      - wpsite
+networks:
+  wpsite:
 volumes:
-  dbdata:
-  sockdata:
+  db_data:
