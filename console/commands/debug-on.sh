@@ -12,14 +12,7 @@ fi
 
 ${COMMANDS_DIR}/exec.sh sed -i -e 's/^\;zend_extension/zend_extension/g' /usr/local/etc/php/conf.d/docker-php-ext-xdebug.ini
 
-if [[ "${MACHINE}" == "mac" || "${MACHINE}" == "windows" ]]; then
-    printf "${YELLOW}Copying generated code into host ${COLOR_RESET}\n"
-    ${COMMANDS_DIR}/mirror-container.sh -f ${GENERATED_DIR}
-    # No need to restart because mirror-container.sh already does a restart
-    # ${DOCKER_COMPOSE} restart ${SERVICE_PHP}
-else
-    ${DOCKER_COMPOSE} restart ${SERVICE_PHP}
-fi
+${DOCKER_COMPOSE} restart ${SERVICE_PHP}
 
 printf "${YELLOW}xdebug configuration: ${COLOR_RESET}\n"
 printf "${YELLOW}--------------------------------${COLOR_RESET}\n"

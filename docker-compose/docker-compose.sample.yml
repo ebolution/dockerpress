@@ -16,11 +16,11 @@ services:
       MYSQL_PASSWORD: wordpress
     networks:
       - wpsite
-  # Wordpress
+  # WordPress
   wordpress:
     depends_on:
       - db
-    image: ebolution/wordpress:5.4-es_es
+    image: ebolution/wordpress:5.7.2-es_es
     ports:
       - '8000:80'
     restart: always

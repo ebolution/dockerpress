@@ -1,0 +1,16 @@
+HOST_DIR="."
+
+DOCKER_COMPOSE_FILE="docker-compose.yml"
+DOCKER_COMPOSE_FILE_LINUX="docker-compose.dev.linux.yml"
+DOCKER_COMPOSE_FILE_MAC="docker-compose.dev.mac.yml"
+DOCKER_COMPOSE_FILE_WINDOWS="docker-compose.dev.windows.yml"
+
+SERVICE_PHP="wordpress"
+SERVICE_DB="db"
+SERVICES_WITH_LINUX_PERMISSIONS_ISSUES="${SERVICE_PHP}"
+
+USER_PHP="www-data"
+GROUP_PHP="www-data"
+WORKDIR_PHP="/var/www/html"
+
+COMPOSE_PROJECT_NAME=""
